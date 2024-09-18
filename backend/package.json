@@ -1,0 +1,16 @@
+{
+    "name": "patient-info-backend",
+    "version": "1.0.0",
+    "description": "Backend for Patient Information System",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "pg": "^8.7.1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}
