@@ -4,80 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Patient Information System</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                max-width: 900px;
-                margin: 0 auto;
-                margin-top: 90px;
-                padding: 20px;
-                background-color: #f0f4f7;
-            }
-            
-            h1 {
-                font-size: 40px;
-                margin-bottom: 40px;
-                text-align: center;
-                color: #2c3e50;
-            }
-            
-            h2 {
-                color: #2980b9; 
-            }
-            
-            form {
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-                padding: 20px;
-                background-color: #ffffff;
-                border: 1px solid #cccccc;
-                border-radius: 10px;
-                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            input, button {
-                padding: 15px;
-                font-size: 16px;
-                border-radius: 5px;
-                border: 1px solid #cccccc;
-            }
-
-            input:focus {
-                outline: none;
-                border-color: #3498db;
-            }
-
-            button {
-                background-color: #3498db;
-                color: #ffffff;
-                border: none;
-                cursor: pointer;
-            }
-
-            button:hover {
-                background-color: #2980b9;
-            }
-
-            #result {
-                margin-top: 20px;
-                padding: 20px;
-                background-color: #ffffff;
-                border: 1px solid #cccccc;
-                border-radius: 10px;
-                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            #result p {
-                font-size: 16px;
-                color: #2c3e50;
-            }
-
-            #result h4 {
-                font-size: 16px;
-                color: #e74c3c; 
-            }
-        </style>
+        <link rel="stylesheet" href="/style.css">
     </head>
     <body>
         <h1>Patient Information System</h1>
@@ -86,32 +13,6 @@
             <button type="submit">Get Patient Info</button>
         </form>
         <div id="result"></div>
-
-        <script>
-            document.getElementById('patientForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const patientId = document.getElementById('patientId').value;
-                const resultDiv = document.getElementById('result');
-
-                try {
-                    const response = await fetch(`/api/patients/${patientId}`);
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        resultDiv.innerHTML = `
-                            <h2>Patient Information</h2>
-                            <p><strong>ID:</strong> ${data.id}</p>
-                            <p><strong>Name:</strong> ${data.name}</p>
-                            <p><strong>Age:</strong> ${data.age}</p>
-                            <p><strong>Gender:</strong> ${data.gender}</p>
-                        `;
-                    } else {
-                        resultDiv.innerHTML = `<h4>Error: ${data.message}</h4>`;
-                    }
-                } catch (error) {
-                    resultDiv.innerHTML = `<h4>Error: Unable to fetch patient information</h4>`;
-                }
-            });
-        </script>
+        <script src="/app.js"></script>
     </body>
 </html>
