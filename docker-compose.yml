@@ -1,30 +1,76 @@
 # docker-compose.yml
+
+# Specifies the version of the Docker Compose file format
+# Version 3 is the latest major version and supports all current Docker features
 version: '3'
+
+# Defines the services (containers) that make up the application
 services:
+
+  # Frontend service configuration
   frontend:
+    # Builds the frontend service using the Dockerfile in the ./frontend directory
     build: ./frontend
+    # Maps port 80 on the host to port 80 in the container
+    # This allows accessing the frontend through http://localhost
     ports:
       - "80:80"
+    # Ensures that the frontend service starts after the backend service
+    # This is important because the frontend needs to make API calls to the backend
     depends_on:
       - backend
+    # Note: No explicit network configuration is needed here. Docker Compose automatically
+    # creates a default bridge network and connects all services to it.
 
+  # Backend service configuration
   backend:
+    # Builds the backend service using the Dockerfile in the ./backend directory
     build: ./backend
+    # Environment variables for the backend service
+    # These are used to configure the connection to the database
     environment:
       - DB_USER=postgres
-      - DB_HOST=db
+      - DB_HOST=db  # 'db' is the service name of the database, which resolves to the container's IP
       - DB_NAME=patientdb
       - DB_PASSWORD=password
       - DB_PORT=5432
+    # Ensures that the backend service starts after the database service
+    # This is crucial because the backend needs the database to be ready to accept connections
     depends_on:
       - db
+    # Note: No ports are exposed for the backend. It's only accessible to other services
+    # within the Docker network, enhancing security.
 
+  # Database service configuration
   db:
+    # Uses the official PostgreSQL 13 image from Docker Hub
     image: postgres:13
+    # Environment variables for initializing the PostgreSQL database
     environment:
       - POSTGRES_DB=patientdb
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
+    # Volumes for data persistence and initialization
     volumes:
+      # This is a bind mount (host volume)
+      # It copies the init.sql file from the host into the container
+      # Any .sql files in /docker-entrypoint-initdb.d/ are automatically executed on container startup
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    # Note: No ports are exposed for the database. It's only accessible to other services
+    # within the Docker network, enhancing security.
 
+# Note: The 'networks' keyword is not needed here because:
+# 1. Docker Compose automatically creates a default bridge network for the application
+# 2. All services are automatically connected to this default network
+# 3. Services can communicate with each other using their service names as hostnames
+# 4. The default network provides isolation from other Docker networks on the host
+
+# Note on volumes:
+# This compose file uses a bind mount for database initialization
+# For data persistence across container restarts, consider adding a named volume:
+# volumes:
+#   postgres_data:
+# Then add to the 'db' service:
+#   volumes:
+#     - postgres_data:/var/lib/postgresql/data
+#     - ./init.sql:/docker-entrypoint-initdb.d/init.sql
